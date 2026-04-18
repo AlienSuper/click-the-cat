@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐱 戳一下猫会叫</title>
+    <style>
+        body {
+            background-color: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', '微软雅黑', sans-serif;
+        }
+        .container {
+            text-align: center;
+            background-color: #16213e;
+            padding: 40px 30px;
+            border-radius: 40px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+        h1 {
+            color: #e2e2e2;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+        .cat-box {
+            background-color: #0f3460;
+            padding: 40px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            user-select: none;
+        }
+        .cat-box:active {
+            transform: scale(0.97);
+        }
+        .cat-emoji {
+            font-size: 120px;
+            line-height: 1.4;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
+        }
+        .hint {
+            color: #a0a0a0;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .footer {
+            margin-top: 30px;
+            color: #5c6b7a;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 外星小怪的猫 🐾</h1>
+        <div class="cat-box" id="catButton">
+            <div class="cat-emoji" id="catEmoji">🐱</div>
+            <div class="hint" id="message">戳我一下，我会叫哦</div>
+        </div>
+        <div class="footer">
+            ⚡ 点一下喵一声 · 再点一下变个表情 ⚡
+        </div>
+    </div>
+
+    <script>
+        // 这是让猫“活过来”的小魔法，不用看懂，复制就行
+        const catEmoji = document.getElementById('catEmoji');
+        const message = document.getElementById('message');
+        
+        // 准备几个不同的猫咪表情和对应的台词
+        const catStates = [
+            { emoji: '🐱', msg: '喵~ 再戳一下嘛' },
+            { emoji: '😺', msg: '喵呜！开心' },
+            { emoji: '😸', msg: '嘻嘻，好痒' },
+            { emoji: '😹', msg: '喵哈哈哈别闹' },
+            { emoji: '😻', msg: '最喜欢你啦' },
+            { emoji: '🙀', msg: '哇！吓我一跳' },
+            { emoji: '😿', msg: '唔…轻一点嘛' },
+            { emoji: '😾', msg: '哼！再戳我生气了' }
+        ];
+        
+        let currentIndex = 0;
+        
+        // 播放喵叫声（利用浏览器内置的语音合成，这样不用下载音频文件）
+        function playMeow() {
+            // 如果浏览器支持语音
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance('喵');
+                utterance.lang = 'zh-CN';
+                utterance.rate = 1.2;
+                utterance.pitch = 1.5;
+                utterance.volume = 0.8;
+                window.speechSynthesis.cancel(); // 防止连续点击重叠
+                window.speechSynthesis.speak(utterance);
+            } else {
+                // 不支持语音的浏览器就弹个提示
+                alert('喵~ (你的浏览器不支持语音，但我知道你戳我了)');
+            }
+        }
+        
+        // 切换表情和文字
+        function changeCatState() {
+            currentIndex = (currentIndex + 1) % catStates.length;
+            const state = catStates[currentIndex];
+            catEmoji.textContent = state.emoji;
+            message.textContent = state.msg;
+        }
+        
+        // 点击猫猫区域时触发
+        document.getElementById('catButton').addEventListener('click', function() {
+            playMeow();
+            changeCatState();
+        });
+        
+        // 提示：部分浏览器（如Chrome）需要用户与页面交互过一次后才允许自动播放语音，
+        // 所以我们把语音播放放在点击事件里，完全没问题。
+        // 第一次点击可能会稍有延迟，因为语音引擎需要初始化，之后就好了。
+    </script>
+</body>
+</html>
